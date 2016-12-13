@@ -5,7 +5,6 @@
     :dependencies [
                    [org.clojure/clojure "1.8.0"]
                    [otomatik "0.2.0-SNAPSHOT"]
-                   [org.clojure/core.async "0.2.395"]
                   ]
     :target-path "target/%s"
     :profiles {:uberjar {:aot :all}})

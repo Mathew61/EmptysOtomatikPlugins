@@ -1,8 +1,5 @@
 (ns rocks.empty.otomatik-plugins.dad-plugin
-  (:require [rocks.empty.otomatik.irc-commands :as irc-commands])
-  (:require [clojure.core.async
-             :as a
-             :refer [>! <! >!! <!! go chan buffer close! thread alts! alts!! timeout]]))
+  (:require [rocks.empty.otomatik.irc-commands :as irc-commands]))
 
 ; TODO casing
 (defn go-dad
@@ -12,16 +9,17 @@
     results (re-find (re-matcher #"(i'm|i am)\s+(.+?)([\.?!,]|$)" text))
     ]
 
-    (when (not (= nil (nth results 2)))
+    (if (= nil (nth results 2))
+      nil
       (let [
         writer (:writer (:connection packet))
         room (nth (:params (:message packet)) 0)
-        bot-nick @(:nickname packet)
+        bot-nick (:nickname packet)
         sender (first (:prefix (:message packet)))
         response-location (if (= room bot-nick) sender room)
         msg (str "Hi " (nth results 2) ", I'm " bot-nick ".")
         ]
-        (>!! (:out packet) (irc-commands/build-message {:command "PRIVMSG" :options (list response-location msg)}))))))
+        (str "PRIVMSG " response-location " :" msg)))))
 
 (defmulti handle
   "Handles IRC commands based on the given IRC command."

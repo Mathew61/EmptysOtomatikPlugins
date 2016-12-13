@@ -3,5 +3,5 @@
 (def registration
   {
    :author "@the_empty on GitHub"
-   :function (fn [packet] (println packet))
+   :function (fn [packet] (println packet) nil)
    })
