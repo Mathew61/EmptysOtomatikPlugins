@@ -1,5 +1,4 @@
-(ns rocks.empty.otomatik-plugins.dad-plugin
-  (:require [rocks.empty.otomatik.irc-commands :as irc-commands]))
+(ns rocks.empty.otomatik-plugins.dad-plugin)
 
 ; TODO casing
 (defn go-dad
@@ -12,14 +11,11 @@
     (if (= nil (nth results 2))
       nil
       (let [
-        writer (:writer (:connection packet))
-        room (nth (:params (:message packet)) 0)
-        bot-nick (:nickname packet)
-        sender (first (:prefix (:message packet)))
-        response-location (if (= room bot-nick) sender room)
-        msg (str "Hi " (nth results 2) ", I'm " bot-nick ".")
+          room (first (:params (:message packet)))
+          sender (first (:prefix (:message packet)))
+          response-location (if (= room (:nickname packet)) sender room)
         ]
-        (str "PRIVMSG " response-location " :" msg)))))
+        (str "PRIVMSG " response-location " :Hi" (nth results 2) ", I'm " (:nickname packet) ".")))))
 
 (defmulti handle
   "Handles IRC commands based on the given IRC command."

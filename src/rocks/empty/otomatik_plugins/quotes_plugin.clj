@@ -34,14 +34,15 @@
       (fn [packet activation-string file-handler] (:command (:message packet))))
 
 (defmethod handle "PRIVMSG"  [packet activation-string file-handler]
-  (let
-    [
-     message (last (:params (:message packet)))
-     to (first (:params (:message packet)))
+  (let [
+      message (last (:params (:message packet)))
+      room (first (:params (:message packet)))
+      sender (first (:prefix (:message packet)))
+      response-location (if (= room (:nickname packet)) sender room)
     ]
     (if-not (.equals message activation-string)
       nil
-      (str "PRIVMSG " to " :" (read-random-line file-handler)))))
+      (str "PRIVMSG " response-location " :" (read-random-line file-handler)))))
 
 ; NO-OP for unknown commands
 (defmethod handle :default [packet activation-string file-handler] nil)
